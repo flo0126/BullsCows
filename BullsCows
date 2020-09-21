@@ -1,0 +1,134 @@
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+/*
+ * Author: Florence Yared
+ * Date: Sept 21, 2020
+ * 
+ * BullsCows : This program initiates a game of Bulls and Cows, in which
+ * a player guesses a 4 digit password. The program  will respond with
+ * the number of correct numbers in the correct place (bulls) and the
+ * number of correct numbers in the incorrect place (cows)
+ * 
+ * 
+ */
+
+public class BullsCows implements ActionListener {
+	
+	
+	private int count = 0;
+	private JLabel label;
+	private JLabel labelIntro;
+	private JFrame frame;
+	private JButton button;
+	private JPanel panel;
+	private JTextField fieldGuess;
+	private int first;
+	
+	//new
+	//This is the constructor that establishes the GUI
+	public BullsCows() {
+		
+		frame = new JFrame();
+		
+		labelIntro = new JLabel("Enter a 4-digit password guess");
+		
+		button = new JButton("Guess");
+		button.addActionListener(this);
+		
+		label = new JLabel("Bulls: 0" + '\n' + "Cows: 0");
+		
+		fieldGuess = new JTextField();
+		fieldGuess.addActionListener(this);
+		
+		
+		panel = new JPanel();
+		panel.setBorder(BorderFactory.createEmptyBorder(50, 50, 10, 50));
+		panel.setLayout(new GridLayout(0,1));
+		
+		panel.add(labelIntro);
+		panel.add(fieldGuess);
+		panel.add(label);
+		panel.add(button);
+		
+		frame.add(panel, BorderLayout.CENTER);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setTitle("Bulls and Cows");
+		frame.pack();
+		frame.setVisible(true);
+		
+		
+		
+	}
+	
+	//main arg that calls the constructor
+	public static void main(String[] args) {
+		new BullsCows();
+		
+	}
+
+	@Override
+	//events that occur when button is clicked
+	public void actionPerformed(ActionEvent e) {
+		String input = fieldGuess.getText();
+		
+		first = Integer.parseInt(input);
+		int ans = 7437;
+		String ansString = "7437";
+		int[] secret = IntToArray(ans);
+		int bulls = 0;
+		int[] guess = IntToArray(first);
+		bulls = numOfBulls(guess, secret);
+		int cowGross = numOfCows(input, ansString);
+		int cows = cowGross - bulls;
+		
+		
+		label.setText("Bulls: " + bulls + '\t'+ "Cows: " + cows);
+		
+	}
+	
+	
+	//counting number of bulls
+	public static int numOfBulls(int[] guess, int[] secret) {
+		int bullCount = 0;
+		for(int i=0; i<4; i++) {
+			if(guess[i] == secret[i]) {
+				bullCount++;
+			}
+		}
+		return bullCount;
+	}
+	
+	//counting number of cows
+	public static int numOfCows(String guess, String secret) {
+		int cowCount = 0;
+		for(int i=0; i<4; i++) {
+			if(guess.contains(secret.charAt(i)+ "")) {
+				cowCount++;	
+			}
+		}
+		return cowCount;
+	}
+	
+	//convert int to array for numOfBulls
+	public static int[] IntToArray(int a) {
+		int[] tempInt = new int[4];
+		for(int i=3; i>=0; i--) {
+			int temp = a % 10;
+			tempInt[i] = temp;
+			a = (a-temp)/10;
+		}
+		return tempInt;
+	}
+	
+}
